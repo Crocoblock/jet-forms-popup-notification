@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="jet-form-editor__row">
+    <div :class="{ 'jet-form-editor__row': true, 'jet-forms-popup-notification-loading': isLoading }">
         <div class="jet-form-editor__row-label"><?php
             _e( 'Select popup:', 'jet-forms-popup-notification' );
             ?></div>

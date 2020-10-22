@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: JetForms Popup Notification
+ * Plugin Name: JetEngine Forms - popup notification
  * Plugin URI:
  * Description:
- * Version:     0.1
+ * Version:     1.0.0
  * Author:      Crocoblock
  * Author URI:  https://crocoblock.com/
  * Text Domain: jet-forms-popup-notification
@@ -22,7 +22,7 @@ add_action( 'plugins_loaded', 'jet_forms_popup_notification' );
 
 function jet_forms_popup_notification() {
 
-    define( 'JET_FORMS_POPUP_NOTIFICATION_VERSION', '0.1' );
+    define( 'JET_FORMS_POPUP_NOTIFICATION_VERSION', '1.0.0' );
 
     define( 'JET_FORMS_POPUP_NOTIFICATION__FILE__', __FILE__ );
     define( 'JET_FORMS_POPUP_NOTIFICATION_PLUGIN_BASE', plugin_basename( JET_FORMS_POPUP_NOTIFICATION__FILE__ ) );

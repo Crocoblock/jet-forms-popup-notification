@@ -3,6 +3,8 @@
 
 namespace Jet_Forms_PN;
 
+use Jet_Forms_PN\Helpers\Providers_Manager;
+
 
 class Notification
 {
@@ -61,7 +63,7 @@ class Notification
      * @return [type] [description]
      */
     public function register_notification( $notifications ) {
-        $notifications[ $this->slug ] = __( 'Popup after Submit' );
+        $notifications[ $this->slug ] = __( 'Show Popup' );
         return $notifications;
     }
 

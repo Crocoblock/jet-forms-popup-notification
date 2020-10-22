@@ -2,6 +2,13 @@
 
 namespace Jet_Forms_PN;
 
+use Jet_Forms_PN\Dependencies\Elementor_Pro;
+use Jet_Forms_PN\Dependencies\Jet_Engine;
+use Jet_Forms_PN\Dependencies\Jet_Popup;
+use Jet_Forms_PN\Helpers\Providers_Manager;
+use Jet_Forms_PN\Helpers\Ajax_Manager;
+use Jet_Forms_PN\Helpers\Dependency_Manager;
+
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
     die();
@@ -21,22 +28,23 @@ class Plugin
      * @var Plugin
      */
     public static $instance = null;
-    private $dependencies_must_have;
-    private $dependencies_simple;
 
     public $notification;
 
     public $slug = 'jet-forms-popup-notification';
+
+    public $dependence_manager;
 
     public $isset_jet_popup = true;
     public $isset_elementor_pro = true;
 
     private function __construct() {
 
+        $this->register_autoloader();
+
         if( ! $this->check_dependencies() ) {
             return;
         }
-        $this->register_autoloader();
 
         add_action(
             'after_setup_theme',
@@ -45,7 +53,7 @@ class Plugin
 
         add_action(
             'wp_enqueue_scripts',
-            array( $this, 'register_scripts' ), 99999
+            array( $this, 'register_scripts' ), 999
         );
     }
 
@@ -95,13 +103,26 @@ class Plugin
                         }
                     } );
                 }
-                else if( provider === '$elementor' && elementorProFrontend !== 'undefined' ) {
+                else if( provider === '$elementor' && typeof elementorProFrontend !== 'undefined' ) {
                     elementorProFrontend.modules.popup.showPopup( 
                         { id: popupId } 
                     );
                 }
             }
         ";
+    }
+
+    public function check_dependencies() {
+        $this->dependence_manager = new Dependency_Manager();
+
+        $this->dependence_manager->must_have( array(
+            new Jet_Engine()
+        ) )->simple( array(
+            new Jet_Popup(),
+            new Elementor_Pro()
+        ) );
+
+        return $this->dependence_manager->check_dependencies();
     }
 
     public function parse_after_submit() {
@@ -127,100 +148,6 @@ class Plugin
         Autoloader::run();
     }
 
-    private function dependencies() {
-        $this->dependencies_must_have  = array(
-            'jet_engine' => array(
-                'check_exist'   => array( $this, 'jet_engine_check' ),
-                'if_absent'     => array( $this, 'jet_engine_absent' ),
-            ),
-        );
-
-        $this->dependencies_simple = array(
-            'jet_popup' => array(
-                'check_exist'   => array( $this, 'jet_popup_check' ),
-                'if_absent'     => array( $this, 'jet_popup_absent' ),
-            ),
-            'elementor_pro' => array(
-                'check_exist'   => array( $this, 'elementor_pro_check' ),
-                'if_absent'     => array( $this, 'elementor_pro_absent' ),
-            )
-        );
-    }
-
-    public function elementor_pro_check() {
-        return defined( 'ELEMENTOR_PRO_VERSION' );
-    }
-    public function elementor_pro_absent() {
-        $this->isset_elementor_pro = false;
-    }
-
-
-    private function jet_engine_check() {
-        return function_exists( 'jet_engine' );
-    }
-    private function jet_engine_absent() {
-        $this->isset_elementor_pro = false;
-
-        add_action( 'admin_notices', function() {
-            $class = 'notice notice-error';
-            $message = __( '<b>WARNING!</b> <b>JetForms Popup Notification</b> plugin requires <b>JetEngine</b> plugin to work properly!',
-                'jet-forms-popup-notification' );
-            printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
-        } );
-    }
-
-    private function jet_popup_check() {
-        return function_exists( 'jet_popup' );
-    }
-
-    private function jet_popup_absent() {
-        $this->isset_jet_popup = false;
-    }
-
-    public function show_simple_warnings() {
-        if ( $this->isset_elementor_pro || $this->isset_jet_popup ) {
-            return;
-        }
-        add_action( 'admin_notices', function() {
-            $class = 'notice notice-error';
-            $message = __( '<b>WARNING!</b> <b>JetForms Popup Notification</b> plugin requires <b>JetPopup</b> or <b>Elementor Pro</b> plugin to work properly!',
-                'jet-forms-popup-notification' );
-            printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
-        } );
-    }
-
-    private function check_dependencies() {
-        $this->dependencies();
-
-        $is_all_present = true;
-
-        foreach ($this->dependencies_must_have as $dependence ) {
-            if ( is_callable( $dependence[ 'check_exist' ] )
-                && ! $dependence[ 'check_exist' ]() )
-            {
-                if ( is_callable( $dependence[ 'if_absent' ] ) ) {
-                    $dependence[ 'if_absent' ]();
-                }
-                $is_all_present = false;
-            }
-        }
-
-        $simple_present = false;
-        foreach ( $this->dependencies_simple as $dependence_simple ) {
-            if ( is_callable( $dependence_simple['check_exist'] )
-                && $dependence_simple[ 'check_exist' ]() ) {
-
-                $simple_present = true;
-
-            } elseif ( is_callable( $dependence_simple[ 'if_absent' ] ) ) {
-
-                $dependence_simple[ 'if_absent' ]();
-            }
-        }
-        $this->show_simple_warnings();
-
-        return ( $is_all_present && $simple_present );
-    }
 
     public function get_template_path( $template ) {
         $path = JET_FORMS_POPUP_NOTIFICATION_PATH . 'templates' . DIRECTORY_SEPARATOR;

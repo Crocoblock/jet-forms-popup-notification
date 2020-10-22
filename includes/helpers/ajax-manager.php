@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jet_Forms_PN;
+namespace Jet_Forms_PN\Helpers;
 
 
 class Ajax_Manager

@@ -10,7 +10,8 @@ Vue.component( 'jet-forms-popup-notification', {
         return {
             popups: [],
             providers: {},
-            resultData: {}
+            resultData: {},
+            isLoading: false
         };
     },
     created: function() {
@@ -72,6 +73,8 @@ Vue.component( 'jet-forms-popup-notification', {
             }
             var self = this;
 
+            this.isLoading = true;
+
             if ( self.popups ) {
                 self.popups.splice( 0, self.popups.length );
             }
@@ -92,11 +95,15 @@ Vue.component( 'jet-forms-popup-notification', {
                         self.$set( self.popups, i, response.data.popups[ i ] );
                     }
                 }
+                self.$set( self,'isLoading', false );
                 self.$forceUpdate();
 
             } ).fail( function( jqXHR, textStatus, errorThrown ) {
                 console.log( textStatus, errorThrown );
+                self.$set( self,'isLoading', false );
             } );
+
+
         },
     },
 
