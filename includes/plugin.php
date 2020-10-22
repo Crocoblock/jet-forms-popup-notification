@@ -126,7 +126,7 @@ class Plugin
     }
 
     public function parse_after_submit() {
-        if ( empty( $_GET ) || $_GET['status'] !== 'success' ) {
+        if ( ! isset( $_GET['status'] ) || $_GET['status'] !== 'success' ) {
             return '[]';
         }
         $fields = $_GET['popup_data'];
