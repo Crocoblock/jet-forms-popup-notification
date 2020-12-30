@@ -33,7 +33,8 @@ class Elementor_Pro extends Provider_Base
             ),
             'post_type'     => 'elementor_library',
             'orderby'       => 'meta_value',
-            'order'         => 'ASC'
+            'order'         => 'ASC',
+            'posts_per_page' => -1
         );
     }
 
