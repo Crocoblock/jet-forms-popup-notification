@@ -37,10 +37,13 @@ class Notification
     }
 
     public function insert_popup_data( $query_args, $args, $handler ) {
-        $notifications = $handler->notifcations->get_all();
-
-        foreach ( $handler->notifcations->get_all() as $notification ) {
-
+    	if ( $handler->notifcations ) {
+		    $notifications = $handler->notifcations->get_all();
+	    } else {
+		    $notifications = $handler->manager->editor->get_notifications( $handler->form );
+	    }
+    	
+        foreach ( $notifications as $notification ) {
             if ( $this->check_notification_data( $notification ) ) {
                 $query_args['popup_data'] = $notification['popup'];
             }
