@@ -62,7 +62,7 @@ class Plugin {
 	}
 
 	public function register_scripts() {
-		wp_add_inline_script( 'jet-engine-frontend-forms', $this->show_popup_js(), 'after' );
+		wp_add_inline_script( 'jquery', $this->show_popup_js(), 'after' );
 	}
 
 	public function show_popup_js() {
@@ -142,9 +142,14 @@ class Plugin {
 	}
 
 	public function parse_after_submit() {
-		if ( ! isset( $_GET['status'] ) || $_GET['status'] !== 'success' ) {
+		if ( ! isset( $_GET['status'] )
+		     || $_GET['status'] !== 'success'
+		     || ! isset( $_GET['popup_data'] )
+		     || ! $_GET['popup_data']
+		) {
 			return '[]';
 		}
+
 		$fields = $_GET['popup_data'];
 
 		if ( ! in_array( $fields['provider'], Providers_Manager::enable_providers() )
