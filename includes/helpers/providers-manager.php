@@ -4,6 +4,7 @@
 namespace Jet_Forms_PN\Helpers;
 
 use Jet_Forms_PN\Plugin;
+use Jet_Forms_PN\Providers\Provider_Base;
 
 
 class Providers_Manager
@@ -11,6 +12,9 @@ class Providers_Manager
     const ELEMENTOR_PRO_PROVIDER_NAME = 'elementor_pro';
     const JET_POPUP_PROVIDER_NAME = 'jet_popup';
 
+	/**
+	 * @var Provider_Base
+	 */
     public $provider;
 
     public function __construct( $provider ) {

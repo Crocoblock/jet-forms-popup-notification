@@ -1,0 +1,21 @@
+{
+	"name": "jet-forms-popup-notification",
+	"description": "Addon for JetFormBuilder & JetEngine",
+	"version": "1.0.0",
+	"author": "hug.reed <sanko200065@gmail.com>",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"dev": "webpack --mode development --progress --hide-modules -w",
+		"build": "webpack --mode production --progress --hide-modules -w"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.13.10",
+		"@babel/plugin-proposal-class-properties": "^7.13.0",
+		"@babel/plugin-transform-react-jsx": "^7.12.17",
+		"@babel/preset-env": "^7.13.10",
+		"babel-loader": "^8.1.0",
+		"webpack": "^4.44.2",
+		"webpack-cli": "^3.3.12"
+	}
+}

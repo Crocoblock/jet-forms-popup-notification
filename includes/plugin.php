@@ -8,6 +8,7 @@ use Jet_Forms_PN\Dependencies\Jet_Popup;
 use Jet_Forms_PN\Helpers\Providers_Manager;
 use Jet_Forms_PN\Helpers\Ajax_Manager;
 use Jet_Forms_PN\Helpers\Dependency_Manager;
+use Jet_Forms_PN\Jet_Form_Builder\Action_Manager;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -29,6 +30,10 @@ class Plugin {
 	public static $instance = null;
 
 	public $notification;
+	/**
+	 * @var Ajax_Manager
+	 */
+	public $ajax;
 
 	public $slug = 'jet-forms-popup-notification';
 
@@ -57,8 +62,11 @@ class Plugin {
 	}
 
 	public function init_components() {
-		new Ajax_Manager();
+		$this->ajax         = new Ajax_Manager();
 		$this->notification = new Notification();
+
+		new Action_Manager();
+
 	}
 
 	public function register_scripts() {
@@ -71,13 +79,16 @@ class Plugin {
 
 		$redirect_data = json_encode( $this->parse_after_submit() );
 
-		return "                        
-            jQuery( document ).on( 'jet-engine/form/ajax/on-success', function( event, response, form, request ) {
+		return "          
+			function onAjaxSubmitSuccess( event, response, form, request ) {
                 if ( typeof response.popup_data === 'undefined' ) {
                     return;
                 }
                 showPopup( response.popup_data );
-            } );
+            }
+                          
+            jQuery( document ).on( 'jet-engine/form/ajax/on-success', onAjaxSubmitSuccess );
+            jQuery( document ).on( 'jet-form-builder/ajax/on-success', onAjaxSubmitSuccess )
                 
             let popup_data = JSON.parse( '$redirect_data' );
                 

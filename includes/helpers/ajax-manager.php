@@ -6,7 +6,11 @@ namespace Jet_Forms_PN\Helpers;
 
 class Ajax_Manager
 {
+	/**
+	 * @var Providers_Manager
+	 */
     public $manager;
+    public $action = 'jet_pep_get_popups_by_provider';
 
     public function __construct() {
         $this->add_hooks();
@@ -18,14 +22,14 @@ class Ajax_Manager
         }
 
         add_action(
-            'wp_ajax_jet_pep_get_popups_by_provider',
+            "wp_ajax_{$this->action}",
             array( $this, 'get_popups_by_provider' )
         );
     }
 
     public function get_popups_by_provider() {
         if ( ! $this->set_provider() ) {
-            return;
+        	wp_send_json_error();
         }
 
         wp_send_json_success( array(
