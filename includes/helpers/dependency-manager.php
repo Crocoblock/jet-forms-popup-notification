@@ -5,7 +5,7 @@ namespace Jet_Forms_PN\Helpers;
 
 class Dependency_Manager
 {
-    private $must_have;
+    private $must_have = array();
     private $simple;
 
     private $is_all_present = true;
