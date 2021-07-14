@@ -20,6 +20,10 @@ class Show_Popup extends Base {
 		return __( 'Show Popup', 'jet-forms-popup-notification' );
 	}
 
+	public function visible_attributes_for_gateway_editor() {
+		return array( 'provider', 'popup' );
+	}
+
 	/**
 	 * @param array $request
 	 * @param Action_Handler $handler
