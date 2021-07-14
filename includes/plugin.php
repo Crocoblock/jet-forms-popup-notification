@@ -50,6 +50,16 @@ class Plugin {
 			return;
 		}
 
+		if ( ! function_exists( 'jet_engine' ) && ! function_exists( 'jet_form_builder' ) ) {
+			add_action( 'admin_notices', function() {
+				$class = 'notice notice-error';
+				$message = __( '<b>WARNING!</b> <b>JetForms Popup Notification</b> plugin requires <b>JetEngine</b> or JetFormBuilder plugin to work properly!',
+					'jet-forms-popup-notification' );
+				printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
+			} );
+			return;
+		}
+
 		add_action(
 			'after_setup_theme',
 			array( $this, 'init_components' ), 0
@@ -142,9 +152,7 @@ class Plugin {
 	public function check_dependencies() {
 		$this->dependence_manager = new Dependency_Manager();
 
-		$this->dependence_manager->must_have( array(
-			new Jet_Engine()
-		) )->simple( array(
+		$this->dependence_manager->simple( array(
 			new Jet_Popup(),
 			new Elementor_Pro()
 		) );
