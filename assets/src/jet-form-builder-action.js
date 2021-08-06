@@ -65,7 +65,7 @@ addAction( 'popup_after_submit', function ShowPopupAction( props ) {
 			options={ withPlaceholder( source.providers ) }
 			labelPosition='side'
 		/>
-		<div style={ { opacity: isLoading ? '0.5' : '1' } } className='jet-control-full'>
+		{ settings.provider && <div style={ { opacity: isLoading ? '0.5' : '1' } } className='jet-control-full'>
 			<SelectControl
 				label={ label( 'popup' ) }
 				value={ settings.popup }
@@ -74,6 +74,6 @@ addAction( 'popup_after_submit', function ShowPopupAction( props ) {
 				labelPosition='side'
 				disabled={ isLoading }
 			/>
-		</div>
+		</div> }
 	</>;
 } )
