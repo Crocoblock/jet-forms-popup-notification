@@ -51,23 +51,31 @@ class Plugin {
 		}
 
 		if ( ! function_exists( 'jet_engine' ) && ! function_exists( 'jet_form_builder' ) ) {
-			add_action( 'admin_notices', function() {
-				$class = 'notice notice-error';
-				$message = __( '<b>WARNING!</b> <b>JetForms Popup Notification</b> plugin requires <b>JetEngine</b> or JetFormBuilder plugin to work properly!',
-					'jet-forms-popup-notification' );
-				printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
-			} );
+			add_action(
+				'admin_notices',
+				function () {
+					$class   = 'notice notice-error';
+					$message = __(
+						'<b>WARNING!</b> <b>JetForms Popup Notification</b> plugin requires <b>JetEngine</b> or JetFormBuilder plugin to work properly!',
+						'jet-forms-popup-notification'
+					);
+					printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
+				}
+			);
+
 			return;
 		}
 
 		add_action(
 			'after_setup_theme',
-			array( $this, 'init_components' ), 0
+			array( $this, 'init_components' ),
+			0
 		);
 
 		add_action(
 			'wp_enqueue_scripts',
-			array( $this, 'register_scripts' ), 999
+			array( $this, 'register_scripts' ),
+			999
 		);
 	}
 
@@ -80,82 +88,30 @@ class Plugin {
 	}
 
 	public function register_scripts() {
-		wp_add_inline_script( 'jquery', $this->show_popup_js(), 'after' );
-	}
+		wp_enqueue_script(
+			$this->slug,
+			$this->plugin_url( 'assets/js/frontend.js' ),
+			array( 'jquery' ),
+			$this->get_version(),
+			true
+		);
 
-	public function show_popup_js() {
-		$jet_popup = Providers_Manager::JET_POPUP_PROVIDER_NAME;
-		$elementor = Providers_Manager::ELEMENTOR_PRO_PROVIDER_NAME;
-
-		$redirect_data = json_encode( $this->parse_after_submit() );
-
-		return "          
-			function onAjaxSubmitSuccess( event, response, form, request ) {
-                if ( typeof response.popup_data === 'undefined' ) {
-                    return;
-                }
-                showPopup( response.popup_data );
-            }
-                          
-            jQuery( document ).on( 'jet-engine/form/ajax/on-success', onAjaxSubmitSuccess );
-            jQuery( document ).on( 'jet-form-builder/ajax/on-success', onAjaxSubmitSuccess )
-                
-            let popup_data = JSON.parse( '$redirect_data' );
-                
-			if ( popup_data ) {
-                showPopup( popup_data, true );
-			}     
-			
-			function triggerPopup( callback, hookName = '', is_reload = false ) {	
-				if ( is_reload && hookName ) {
-					jQuery( window ).on( hookName, callback ); 
-				} else {
-					callback();
-				}
-			}
-            
-            function showPopup( popup_data, is_reload = false ) {
-                const provider = popup_data.provider;
-                let popupId = popup_data.popup;
-                
-                if ( provider === '$jet_popup' ) {
-                    popupId = 'jet-popup-' + popupId;
-                    
-                    const callback = () => {
-                        jQuery( window ).trigger( {
-							type: 'jet-popup-open-trigger',
-	                        popupData: { popupId }
-						} )
-                    };
-                    
-                    triggerPopup( callback, 'jet-popup/init-events/after', is_reload );                   
-                }
-                else if( provider === '$elementor' ) {
-                    const callback = () => {
-	                    setTimeout( () => {
-							if ( typeof elementorProFrontend === 'undefined' ) {
-                                return;
-                            }
-                        
-                            elementorProFrontend.modules.popup.showPopup( 
-								{ id: popupId } 
-							);
-	                    }, 500 );                        
-                    };                    
-                    
-                    triggerPopup( callback, 'elementor/frontend/init', is_reload );
-                }
-            }
-        ";
+		wp_localize_script( $this->slug, 'JetFormPopupActionData', array(
+			'jet_popup'     => Providers_Manager::JET_POPUP_PROVIDER_NAME,
+			'elementor_pro' => Providers_Manager::ELEMENTOR_PRO_PROVIDER_NAME,
+			'data'          => $this->parse_after_submit(),
+		) );
 	}
 
 	public function check_dependencies() {
 		$this->dependence_manager = new Dependency_Manager();
 
-		$this->dependence_manager->simple( array(
-			new Jet_Popup(),
-			new Elementor_Pro()
-		) );
+		$this->dependence_manager->simple(
+			array(
+				new Jet_Popup(),
+				new Elementor_Pro(),
+			)
+		);
 
 		return $this->dependence_manager->check_dependencies();
 	}
@@ -220,7 +176,6 @@ class Plugin {
 	 * @since 1.0.0
 	 * @access public
 	 * @static
-	 *
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
