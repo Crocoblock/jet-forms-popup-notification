@@ -29,11 +29,20 @@ class Notification
             'jet-engine/forms/booking/notifications/fields-after',
             array( $this, 'notification_fields' )
         );
-        add_filter(
-            'jet-engine/forms/handler/query-args',
-            array( $this, 'insert_popup_data' ), 0, 3
+        add_action(
+        	"jet-engine/forms/booking/notification/{$this->slug}",
+	        array( $this, 'do_notification' ),
+	        10, 2
         );
+    }
 
+    public function do_notification( $notification, $handler ) {
+	    $handler->log[] = true;
+
+	    add_filter(
+		    'jet-engine/forms/handler/query-args',
+		    array( $this, 'insert_popup_data' ), 0, 3
+	    );
     }
 
     public function insert_popup_data( $query_args, $args, $handler ) {

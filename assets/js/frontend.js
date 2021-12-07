@@ -53,10 +53,8 @@
 		$( document ).on( 'jet-form-builder/ajax/on-success', onAjaxSubmitSuccess );
 
 		$( function () {
-			let popup_data = JSON.parse( source.data );
-
-			if ( popup_data ) {
-				showPopup( popup_data, true );
+			if ( source.data ) {
+				showPopup( source.data, true );
 			}
 		} );
 	}

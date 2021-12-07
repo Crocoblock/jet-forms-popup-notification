@@ -122,7 +122,7 @@ class Plugin {
 		     || ! isset( $_GET['popup_data'] )
 		     || ! $_GET['popup_data']
 		) {
-			return '[]';
+			return array();
 		}
 
 		$fields = $_GET['popup_data'];
@@ -130,7 +130,7 @@ class Plugin {
 		if ( ! in_array( $fields['provider'], Providers_Manager::enable_providers() )
 		     || ! is_numeric( $fields['popup'] )
 		) {
-			return '[]';
+			return array();
 		}
 
 		return $fields;
