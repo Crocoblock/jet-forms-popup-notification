@@ -24,7 +24,7 @@
 			if ( provider === source.jet_popup ) {
 				popupId = 'jet-popup-' + popupId;
 
-				const callback = (event, { self, settings }) => {
+				const callback = (event, { settings }) => {
 					if ( settings['jet-popup-id'] !== popupId ) {
 						return;
 					}
