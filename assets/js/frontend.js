@@ -24,8 +24,10 @@
 			if ( provider === source.jet_popup ) {
 				popupId = 'jet-popup-' + popupId;
 
-				const callback = (event, { settings }) => {
-					if ( settings['jet-popup-id'] !== popupId ) {
+				const callback = ( event, props ) => {
+					if ( 'object' === typeof props &&
+						props?.settings?.[ 'jet-popup-id' ] !== popupId
+					) {
 						return;
 					}
 					jQuery( window ).trigger( {
