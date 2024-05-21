@@ -24,19 +24,15 @@
 			if ( provider === source.jet_popup ) {
 				popupId = 'jet-popup-' + popupId;
 
-				const callback = ( event, props ) => {
-					if ( 'object' === typeof props &&
-						props?.settings?.[ 'jet-popup-id' ] !== popupId
-					) {
-						return;
-					}
-					jQuery( window ).trigger( {
-						type: 'jet-popup-open-trigger',
-						popupData: { popupId },
-					} );
-				};
-
-				triggerPopup( callback, 'jet-popup/init-events/after', is_reload );
+				if ( 'object' === typeof props &&
+					props?.settings?.[ 'jet-popup-id' ] !== popupId
+				) {
+					return;
+				}
+				jQuery( window ).trigger( {
+					type: 'jet-popup-open-trigger',
+					popupData: { popupId },
+				} );
 			} else if ( provider === source.elementor_pro ) {
 				const callback = () => {
 					setTimeout( () => {
