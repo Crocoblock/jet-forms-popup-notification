@@ -39,8 +39,8 @@ class Plugin {
 
 	public $dependence_manager;
 
-	public $isset_jet_popup = true;
-	public $isset_elementor_pro = true;
+	public $isset_jet_popup = false;
+	public $isset_elementor_pro = false;
 
 	private function __construct() {
 
