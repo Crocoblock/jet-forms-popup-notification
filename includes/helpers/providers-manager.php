@@ -24,13 +24,13 @@ class Providers_Manager
     public static function get_providers() {
         $providers = array();
 
-        if ( Plugin::instance()->dependence_manager->isset_jet_popup ) {
+        if ( Plugin::instance()->dependence_manager->dependencies['isset_jet_popup'] ) {
             $providers[] = array(
                 'label' => 'JetPopup',
                 'value' => self::JET_POPUP_PROVIDER_NAME,
             );
         }
-        if ( Plugin::instance()->dependence_manager->isset_elementor_pro ) {
+        if ( Plugin::instance()->dependence_manager->dependencies['isset_elementor_pro'] ) {
             $providers[] = array(
                 'label' => 'Elementor Pro',
                 'value' => self::ELEMENTOR_PRO_PROVIDER_NAME,
@@ -53,10 +53,10 @@ class Providers_Manager
     public static function enable_providers() {
         $providers = array();
 
-        if ( Plugin::instance()->dependence_manager->isset_jet_popup ) {
+        if ( Plugin::instance()->dependence_manager->dependencies['isset_jet_popup'] ) {
             $providers[] = self::JET_POPUP_PROVIDER_NAME;
         }
-        if ( Plugin::instance()->dependence_manager->isset_elementor_pro ) {
+        if ( Plugin::instance()->dependence_manager->dependencies['isset_elementor_pro'] ) {
             $providers[] = self::ELEMENTOR_PRO_PROVIDER_NAME;
         }
 

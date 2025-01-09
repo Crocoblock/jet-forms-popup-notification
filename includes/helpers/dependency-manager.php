@@ -14,6 +14,8 @@ class Dependency_Manager
     private $check_name_func    = 'check_exist';
     private $absent_name_func   = 'if_absent';
 
+    public $dependencies = [];
+
     public function check_dependencies() {
 
         $this->check_must_have_present();
@@ -55,9 +57,8 @@ class Dependency_Manager
         }
     }
 
-
     public function show_simple_warnings() {
-        if ( $this->isset_elementor_pro || $this->isset_jet_popup ) {
+        if ( $this->dependencies['isset_elementor_pro'] || $this->dependencies['isset_jet_popup'] ) {
             return;
         }
 
@@ -88,11 +89,7 @@ class Dependency_Manager
     }
 
     private function set_isset( $depend, $value ) {
-        $prop = 'isset_' . $depend->name;
-        $this->$prop = $value;
+        $this->dependencies[ 'isset_' . $depend->name ] = $value;
     }
-
-
-
 
 }
